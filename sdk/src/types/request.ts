@@ -17,3 +17,7 @@ export interface RequestTransformer {
 export interface ResponseTransformer {
 	<Output = any>(data: any): Output | Promise<Output>;
 }
+
+export interface RequestConfig {
+	fetch?: typeof globalThis.fetch;
+}

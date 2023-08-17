@@ -1,3 +1,5 @@
+import { RequestConfig } from '../types/request.js';
+
 /**
  * Request helper providing default settings
  *
@@ -9,6 +11,7 @@
 export const request = async <Output = any>(
 	url: string,
 	options: RequestInit,
+	config: RequestConfig,
 	formatter?: ((data: any) => Output) | null
 ): Promise<Output> => {
 	options.headers =
@@ -26,8 +29,7 @@ export const request = async <Output = any>(
 
 	const outputFormatter = formatter !== undefined && formatter !== null ? formatter : defaultFormatter;
 
-	const response = await globalThis
-		.fetch(url, options)
+	const response = await (config.fetch ?? globalThis.fetch)(url, options)
 		.then(async (response) => {
 			const type = response.headers.get('Content-Type')?.toLowerCase();
 

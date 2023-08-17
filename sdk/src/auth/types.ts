@@ -1,4 +1,4 @@
-import type { loginOptions } from '../index.js';
+import type { RequestConfig, loginOptions } from '../index.js';
 
 export type AuthenticationMode = 'json' | 'cookie';
 
@@ -14,7 +14,7 @@ export interface AuthenticationStorage {
 	set: (value: AuthenticationData | null) => Promise<void> | void;
 }
 
-export interface AuthenticationConfig {
+export interface AuthenticationConfig extends RequestConfig {
 	autoRefresh?: boolean;
 	msRefreshBeforeExpires?: number;
 	storage?: AuthenticationStorage;

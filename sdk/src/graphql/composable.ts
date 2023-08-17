@@ -1,5 +1,5 @@
 import type { DirectusClient } from '../types/client.js';
-import type { GraphqlClient } from './types.js';
+import type { GraphqlClient, GraphqlConfig } from './types.js';
 import { request } from '../utils/request.js';
 import { getRequestUrl } from '../utils/get-request-url.js';
 import type { AuthenticationClient } from '../auth/types.js';
@@ -9,7 +9,7 @@ import type { AuthenticationClient } from '../auth/types.js';
  *
  * @returns A Directus GraphQL client.
  */
-export const graphql = () => {
+export const graphql = (config: GraphqlConfig = {}) => {
 	return <Schema extends object>(client: DirectusClient<Schema>): GraphqlClient<Schema> => {
 		return {
 			async query<Output extends object = Record<string, any>>(
@@ -40,7 +40,7 @@ export const graphql = () => {
 				const requestPath = scope === 'items' ? '/graphql' : '/graphql/system';
 				const requestUrl = getRequestUrl(client.url, requestPath);
 
-				return await request<Output>(requestUrl.toString(), options);
+				return await request<Output>(requestUrl.toString(), options, config);
 			},
 		};
 	};

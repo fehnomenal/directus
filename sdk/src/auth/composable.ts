@@ -99,7 +99,7 @@ export const authentication = (mode: AuthenticationMode = 'cookie', config: Auth
 
 				const requestUrl = getRequestUrl(client.url, '/auth/refresh');
 
-				const data = await request<AuthenticationData>(requestUrl.toString(), options).catch((err) => {
+				const data = await request<AuthenticationData>(requestUrl.toString(), options, config).catch((err) => {
 					throw err;
 				});
 
@@ -127,13 +127,17 @@ export const authentication = (mode: AuthenticationMode = 'cookie', config: Auth
 				if ('otp' in options) authData['otp'] = options.otp;
 				if ('mode' in options) authData['mode'] = options.mode;
 
-				const data = await request<AuthenticationData>(requestUrl.toString(), {
-					method: 'POST',
-					headers: {
-						'Content-Type': 'application/json',
+				const data = await request<AuthenticationData>(
+					requestUrl.toString(),
+					{
+						method: 'POST',
+						headers: {
+							'Content-Type': 'application/json',
+						},
+						body: JSON.stringify(authData),
 					},
-					body: JSON.stringify(authData),
-				});
+					config
+				);
 
 				setCredentials(data);
 				return data;
@@ -155,7 +159,7 @@ export const authentication = (mode: AuthenticationMode = 'cookie', config: Auth
 				}
 
 				const requestUrl = getRequestUrl(client.url, '/auth/logout');
-				await request(requestUrl.toString(), options, null);
+				await request(requestUrl.toString(), options, config);
 
 				if (refreshTimeout) clearTimeout(refreshTimeout);
 				resetStorage();
